@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin View</title>
     <style>
+        /* Same styles as before */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -22,46 +23,23 @@
             color: #1a73e8;
             margin-bottom: 20px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #1a73e8;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
+        input, button {
+            padding: 10px;
             border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #1557b0;
-        }
-        .login-form {
-            max-width: 300px;
-            margin: 100px auto;
+            margin: 10px 0;
         }
         input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1557b0;
         }
         .hidden {
             display: none;
@@ -69,10 +47,20 @@
     </style>
 </head>
 <body>
-    <div id="loginSection" class="login-form">
+    <div id="loginSection" class="container">
         <h2>Admin Login</h2>
         <input type="password" id="adminPass" placeholder="Enter admin password">
         <button onclick="checkPassword()">Login</button>
+        <p>
+            <a href="#" onclick="showResetSection()">Forgot Password?</a>
+        </p>
+    </div>
+
+    <div id="resetSection" class="container hidden">
+        <h2>Reset Admin Password</h2>
+        <input type="password" id="newPass" placeholder="Enter new admin password">
+        <button onclick="resetPassword()">Reset Password</button>
+        <button onclick="cancelReset()" style="background-color: #dc3545;">Cancel</button>
     </div>
 
     <div id="adminSection" class="container hidden">
@@ -87,18 +75,17 @@
                     <th>Password</th>
                 </tr>
             </thead>
-            <tbody id="entriesTable">
-            </tbody>
+            <tbody id="entriesTable"></tbody>
         </table>
     </div>
 
     <script>
-        // Set admin password
-        const ADMIN_PASSWORD = "admin123";
+        // Initial admin password
+        let adminPassword = "admin123";
 
         function checkPassword() {
             const password = document.getElementById('adminPass').value;
-            if (password === ADMIN_PASSWORD) {
+            if (password === adminPassword) {
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('adminSection').classList.remove('hidden');
                 loadEntries();
@@ -117,13 +104,34 @@
             const entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
             const table = document.getElementById('entriesTable');
             table.innerHTML = '';
-            
+
             entries.reverse().forEach(entry => {
                 const row = table.insertRow();
                 row.insertCell(0).textContent = entry.time;
                 row.insertCell(1).textContent = entry.userid;
                 row.insertCell(2).textContent = entry.password;
             });
+        }
+
+        function showResetSection() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('resetSection').classList.remove('hidden');
+        }
+
+        function resetPassword() {
+            const newPass = document.getElementById('newPass').value;
+            if (newPass) {
+                adminPassword = newPass;
+                alert('Password has been reset successfully!');
+                cancelReset();
+            } else {
+                alert('Please enter a new password.');
+            }
+        }
+
+        function cancelReset() {
+            document.getElementById('resetSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
         }
     </script>
 </body>
