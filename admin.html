@@ -3,140 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin View</title>
+    <title>Admin Panel</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f2f5;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 40px auto;
-        }
-        h2 {
-            color: #1a73e8;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #1a73e8;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #1557b0;
-        }
-        .login-form {
-            max-width: 300px;
-            margin: 100px auto;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .hidden {
-            display: none;
-        }
+        /* Same styling as above */
     </style>
 </head>
 <body>
-    <div id="loginSection" class="login-form">
+    <div class="login-container">
         <h2>Admin Login</h2>
-        <input type="password" id="adminPass" placeholder="Enter admin password">
-        <button onclick="checkPassword()">Login</button>
-    </div>
+        <form id="adminLoginForm">
+            <label for="adminId">Admin Username</label>
+            <input type="text" id="adminId" required>
 
-    <div id="adminSection" class="container hidden">
-        <h2>Admin View - Login Entries</h2>
-        <button onclick="loadEntries()">Refresh</button>
-        <button onclick="logout()" style="background-color: #dc3545;">Logout</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>User ID/Email</th>
-                    <th>Password</th>
-                </tr>
-            </thead>
-            <tbody id="entriesTable">
-            </tbody>
-        </table>
-    </div>
+            <label for="adminPassword">Admin Password</label>
+            <input type="password" id="adminPassword" required>
 
-    <!-- This script tag will store the encoded data -->
-    <script id="loginData" type="application/json"></script>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
     <script>
-        const ADMIN_PASSWORD = "admin123"; // Your admin password
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const adminId = document.getElementById('adminId').value;
+            const adminPassword = document.getElementById('adminPassword').value;
+            const response = await fetch('/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ adminId, adminPassword })
+            });
 
-        function checkPassword() {
-            const password = document.getElementById('adminPass').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('adminSection').classList.remove('hidden');
-                loadEntries();
+            const data = await response.json();
+            if (data.success) {
+                alert('Admin Login Successful');
+                // Fetch the login entries here
             } else {
-                alert('Incorrect password!');
+                alert('Admin Login Failed');
             }
-        }
-
-        function logout() {
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('adminSection').classList.add('hidden');
-            document.getElementById('adminPass').value = '';
-        }
-
-        function loadEntries() {
-            const encodedData = localStorage.getItem('encodedData');
-            if (encodedData) {
-                try {
-                    const entries = JSON.parse(atob(encodedData));
-                    const table = document.getElementById('entriesTable');
-                    table.innerHTML = '';
-                    
-                    entries.reverse().forEach(entry => {
-                        const row = table.insertRow();
-                        row.insertCell(0).textContent = entry.time;
-                        row.insertCell(1).textContent = entry.userid;
-                        row.insertCell(2).textContent = entry.password;
-                    });
-
-                    // Update the data script tag
-                    document.getElementById('loginData').textContent = encodedData;
-                } catch(e) {
-                    console.error('Error loading data:', e);
-                }
-            }
-        }
+        });
     </script>
 </body>
 </html>
