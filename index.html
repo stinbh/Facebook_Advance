@@ -3,129 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Login</title>
+    <title>User Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100vh;
+            margin: 20px;
             background-color: #f0f2f5;
-            box-sizing: border-box;
         }
-        .left-container {
-            flex: 1;
-            margin-left: 10%;
-        }
-        .left-container h1 {
-            font-size: 48px;
-            color: #1877f2; /* Facebook blue color */
-            margin-bottom: 10px;
-        }
-        .left-container p {
-            font-size: 20px;
-            color: #606770;
-        }
-        .right-container {
-            flex: 1;
-            max-width: 400px;
-            margin-right: 10%;
+        .login-container {
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .right-container form {
-            display: flex;
-            flex-direction: column;
+        h2 {
+            color: #1a73e8;
+            margin-bottom: 20px;
         }
-        .right-container input {
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
+            margin-bottom: 20px;
             border-radius: 4px;
-            box-sizing: border-box;
+            border: 1px solid #ddd;
         }
-        .right-container button {
-            padding: 10px;
-            background-color: #1877f2;
+        button {
+            padding: 10px 20px;
+            background-color: #1a73e8;
             color: white;
             border: none;
             border-radius: 4px;
-            font-size: 16px;
             cursor: pointer;
         }
-        .right-container button:hover {
-            background-color: #145dbb;
-        }
-        .right-container .secondary-options {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .right-container a {
-            text-decoration: none;
-            color: #1877f2;
-            font-size: 14px;
-        }
-        .right-container .create-account {
-            background-color: #42b72a;
-            margin-top: 10px;
-        }
-        .create-page {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #606770;
-        }
-        .create-page a {
-            text-decoration: none;
-            color: #1877f2;
+        button:hover {
+            background-color: #1557b0;
         }
     </style>
 </head>
 <body>
-    <div class="left-container">
-        <h1>facebook</h1>
-        <p>Connect with friends and the world around you on Facebook.</p>
-    </div>
-    <div class="right-container">
+    <div class="login-container">
+        <h2>User Login</h2>
         <form id="loginForm">
-            <input type="text" id="userid" placeholder="Email or phone number" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Log In</button>
-            <div class="secondary-options">
-                <a href="#">Forgot password?</a>
-            </div>
-            <button type="button" class="create-account">Create new account</button>
+            <label for="userid">Username/Email</label>
+            <input type="text" id="userid" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+
+            <button type="submit">Login</button>
         </form>
-        <div class="create-page">
-            <p>
-                <a href="#">Create a Page</a> for a celebrity, brand, or business.
-            </p>
-        </div>
     </div>
+
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const userid = document.getElementById('userid').value;
             const password = document.getElementById('password').value;
-            
-            let entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
-            entries.push({
-                userid: userid,
-                password: password,
-                time: new Date().toLocaleString()
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userid, password })
             });
-            
-            localStorage.setItem('loginEntries', JSON.stringify(entries));
-            
-            alert('Login successful!');
-            document.getElementById('loginForm').reset();
+
+            const data = await response.json();
+            if (data.success) {
+                alert('Login Successful');
+            } else {
+                alert('Login Failed');
+            }
         });
     </script>
 </body>
