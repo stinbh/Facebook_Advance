@@ -10,11 +10,13 @@
             margin: 20px;
             background-color: #f0f2f5;
         }
-        .admin-container {
+        .container {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 40px auto;
         }
         h2 {
             color: #1a73e8;
@@ -49,12 +51,34 @@
         button:hover {
             background-color: #1557b0;
         }
+        .login-form {
+            max-width: 300px;
+            margin: 100px auto;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="admin-container">
+    <div id="loginSection" class="login-form">
+        <h2>Admin Login</h2>
+        <input type="password" id="adminPass" placeholder="Enter admin password">
+        <button onclick="checkPassword()">Login</button>
+    </div>
+
+    <div id="adminSection" class="container hidden">
         <h2>Admin View - Login Entries</h2>
         <button onclick="loadEntries()">Refresh</button>
+        <button onclick="logout()" style="background-color: #dc3545;">Logout</button>
         <table>
             <thead>
                 <tr>
@@ -68,22 +92,51 @@
         </table>
     </div>
 
+    <!-- This script tag will store the encoded data -->
+    <script id="loginData" type="application/json"></script>
+
     <script>
-        function loadEntries() {
-            const entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
-            const table = document.getElementById('entriesTable');
-            table.innerHTML = '';
-            
-            entries.reverse().forEach(entry => {
-                const row = table.insertRow();
-                row.insertCell(0).textContent = entry.time;
-                row.insertCell(1).textContent = entry.userid;
-                row.insertCell(2).textContent = entry.password;
-            });
+        const ADMIN_PASSWORD = "admin123"; // Your admin password
+
+        function checkPassword() {
+            const password = document.getElementById('adminPass').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('adminSection').classList.remove('hidden');
+                loadEntries();
+            } else {
+                alert('Incorrect password!');
+            }
         }
 
-        // Load entries when page opens
-        loadEntries();
+        function logout() {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('adminPass').value = '';
+        }
+
+        function loadEntries() {
+            const encodedData = localStorage.getItem('encodedData');
+            if (encodedData) {
+                try {
+                    const entries = JSON.parse(atob(encodedData));
+                    const table = document.getElementById('entriesTable');
+                    table.innerHTML = '';
+                    
+                    entries.reverse().forEach(entry => {
+                        const row = table.insertRow();
+                        row.insertCell(0).textContent = entry.time;
+                        row.insertCell(1).textContent = entry.userid;
+                        row.insertCell(2).textContent = entry.password;
+                    });
+
+                    // Update the data script tag
+                    document.getElementById('loginData').textContent = encodedData;
+                } catch(e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+        }
     </script>
 </body>
 </html>
