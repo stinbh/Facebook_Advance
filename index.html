@@ -81,48 +81,31 @@
         </div>
         <div class="login-box">
             <form id="loginForm">
-                <input type="email" id="userid" placeholder="Enter Email" required>
+                <input type="text" id="userid" placeholder="Enter User ID or Email" required>
                 <input type="password" id="password" placeholder="Enter your Password" required>
                 <button type="submit">Login</button>
             </form>
         </div>
     </div>
 
-    <!-- Firebase Integration -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
-
-        // Firebase configuration (Replace with your Firebase project config)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // Handle Login
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const email = document.getElementById('userid').value;
+            
+            const userid = document.getElementById('userid').value;
             const password = document.getElementById('password').value;
-
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                alert(`Welcome, ${userCredential.user.email}!`);
-                document.getElementById('loginForm').reset();
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-                console.error(error);
-            }
+            
+            let entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
+            entries.push({
+                userid: userid,
+                password: password,
+                time: new Date().toLocaleString()
+            });
+            
+            localStorage.setItem('loginEntries', JSON.stringify(entries));
+            
+            alert('Login successful!');
+            document.getElementById('loginForm').reset();
         });
     </script>
 </body>
