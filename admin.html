@@ -1,0 +1,58 @@
+<!-- templates/admin.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Admin Panel</h2>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger mb-3">Logout</a>
+        
+        <h3>Registered Users</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Is Admin</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.is_admin }}</td>
+                    <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3 class="mt-5">Login History</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Login Time</th>
+                    <th>IP Address</th>
+                    <th>Device Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for login in login_history %}
+                <tr>
+                    <td>{{ login.user.username }}</td>
+                    <td>{{ login.login_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ login.ip_address }}</td>
+                    <td>{{ login.user_agent }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
