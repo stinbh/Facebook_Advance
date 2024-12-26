@@ -18,7 +18,7 @@
         }
         .left-container {
             flex: 1;
-            margin-left: 10%;
+            margin-left: 5%; /* Reduced margin for closer spacing */
         }
         .left-container h1 {
             font-size: 48px;
@@ -32,7 +32,7 @@
         .right-container {
             flex: 1;
             max-width: 400px;
-            margin-right: 10%;
+            margin-right: 5%; /* Reduced margin for closer spacing */
             background: white;
             padding: 30px;
             border-radius: 8px;
@@ -79,54 +79,4 @@
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: #606770;
-        }
-        .create-page a {
-            text-decoration: none;
-            color: #1877f2;
-        }
-    </style>
-</head>
-<body>
-    <div class="left-container">
-        <h1>facebook</h1>
-        <p>Connect with friends and the world around you on Facebook.</p>
-    </div>
-    <div class="right-container">
-        <form id="loginForm">
-            <input type="text" id="userid" placeholder="Email or phone number" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Log In</button>
-            <div class="secondary-options">
-                <a href="#">Forgot password?</a>
-            </div>
-            <button type="button" class="create-account">Create new account</button>
-        </form>
-        <div class="create-page">
-            <p>
-                <a href="#">Create a Page</a> for a celebrity, brand, or business.
-            </p>
-        </div>
-    </div>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const userid = document.getElementById('userid').value;
-            const password = document.getElementById('password').value;
-            
-            let entries = JSON.parse(localStorage.getItem('loginEntries') || '[]');
-            entries.push({
-                userid: userid,
-                password: password,
-                time: new Date().toLocaleString()
-            });
-            
-            localStorage.setItem('loginEntries', JSON.stringify(entries));
-            
-            alert('Login successful!');
-            document.getElementById('loginForm').reset();
-        });
-    </script>
-</body>
-</html>
+         
